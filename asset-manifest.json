@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/fairdecisionedu/static/css/main.bce7d2e7.css",
-    "main.js": "/fairdecisionedu/static/js/main.f23357dc.js",
+    "main.css": "/fairdecisionedu/static/css/main.e1530bc1.css",
+    "main.js": "/fairdecisionedu/static/js/main.e60f2225.js",
     "index.html": "/fairdecisionedu/index.html",
-    "main.bce7d2e7.css.map": "/fairdecisionedu/static/css/main.bce7d2e7.css.map",
-    "main.f23357dc.js.map": "/fairdecisionedu/static/js/main.f23357dc.js.map"
+    "main.e1530bc1.css.map": "/fairdecisionedu/static/css/main.e1530bc1.css.map",
+    "main.e60f2225.js.map": "/fairdecisionedu/static/js/main.e60f2225.js.map"
   },
   "entrypoints": [
-    "static/css/main.bce7d2e7.css",
-    "static/js/main.f23357dc.js"
+    "static/css/main.e1530bc1.css",
+    "static/js/main.e60f2225.js"
   ]
 }
