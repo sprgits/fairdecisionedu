@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +8,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  PointElement,
+  LineElement,
+  ArcElement
 } from 'chart.js';
 
 ChartJS.register(
@@ -18,97 +20,147 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  PointElement,
+  LineElement,
   ArcElement
 );
 
-function Statistics() {
-  const violenceTypeData = {
-    labels: ['언어폭력', '신체폭력', '따돌림', '성폭력', '사이버폭력'],
-    datasets: [
-      {
-        data: [30, 25, 20, 15, 10],
-        backgroundColor: [
-          'rgba(2, 132, 199, 0.5)',
-          'rgba(16, 185, 129, 0.5)',
-          'rgba(245, 158, 11, 0.5)',
-          'rgba(239, 68, 68, 0.5)',
-          'rgba(139, 92, 246, 0.5)',
-        ],
-      },
-    ],
+const Statistics = () => {
+  // 월별 사건 발생 건수 (2024년 기준)
+  const monthlyData = {
+    labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    datasets: [{
+      label: '월별 사건 발생 건수',
+      data: [12, 15, 28, 35, 42, 38, 25, 18, 32, 40, 36, 20],
+      backgroundColor: 'rgba(59, 130, 246, 0.5)',
+      borderColor: 'rgb(59, 130, 246)',
+      borderWidth: 1
+    }]
   };
 
+  // 지역별 사건 발생 건수
+  const regionalData = {
+    labels: ['서울', '경기', '인천', '부산', '대구', '광주', '대전', '울산', '세종', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'],
+    datasets: [{
+      label: '지역별 사건 발생 건수',
+      data: [45, 38, 25, 22, 18, 15, 12, 10, 8, 12, 15, 18, 20, 15, 22, 25, 5],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)',
+        'rgba(199, 199, 199, 0.5)',
+        'rgba(83, 102, 255, 0.5)',
+        'rgba(40, 159, 64, 0.5)',
+        'rgba(210, 199, 199, 0.5)',
+        'rgba(78, 52, 199, 0.5)',
+        'rgba(210, 199, 199, 0.5)',
+        'rgba(78, 52, 199, 0.5)',
+        'rgba(210, 199, 199, 0.5)',
+        'rgba(78, 52, 199, 0.5)',
+        'rgba(210, 199, 199, 0.5)',
+        'rgba(78, 52, 199, 0.5)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+        'rgb(255, 159, 64)',
+        'rgb(199, 199, 199)',
+        'rgb(83, 102, 255)',
+        'rgb(40, 159, 64)',
+        'rgb(210, 199, 199)',
+        'rgb(78, 52, 199)',
+        'rgb(210, 199, 199)',
+        'rgb(78, 52, 199)',
+        'rgb(210, 199, 199)',
+        'rgb(78, 52, 199)',
+        'rgb(210, 199, 199)',
+        'rgb(78, 52, 199)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  // 학교급별 사건 발생 건수
   const schoolLevelData = {
     labels: ['초등학교', '중학교', '고등학교'],
-    datasets: [
-      {
-        label: '학교급별 발생 건수',
-        data: [40, 35, 25],
-        backgroundColor: 'rgba(2, 132, 199, 0.5)',
-      },
-    ],
+    datasets: [{
+      label: '학교급별 사건 발생 건수',
+      data: [120, 180, 150],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)'
+      ],
+      borderWidth: 1
+    }]
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-    },
+  // 사건 유형별 발생 건수
+  const incidentTypeData = {
+    labels: ['신체폭력', '언어폭력', '금품갈취', '집단따돌림', '성폭력', '사이버폭력'],
+    datasets: [{
+      label: '사건 유형별 발생 건수',
+      data: [150, 120, 80, 100, 60, 90],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 206, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+        'rgb(255, 159, 64)'
+      ],
+      borderWidth: 1
+    }]
   };
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">폭력 유형별 분포</h3>
-          <Pie data={violenceTypeData} options={options} />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">학교폭력 통계 분석 (2024년)</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">월별 사건 발생 추이</h2>
+          <Line data={monthlyData} />
         </div>
-
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">학교급별 발생 현황</h3>
-          <Bar data={schoolLevelData} options={options} />
-        </div>
-      </div>
-
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">조치 수준 분석</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 bg-primary-50 rounded-lg">
-            <p className="text-sm text-gray-600">경미한 조치 (1-3호)</p>
-            <p className="text-2xl font-bold text-primary-600">35%</p>
-          </div>
-          <div className="p-4 bg-primary-50 rounded-lg">
-            <p className="text-sm text-gray-600">중간 조치 (4-6호)</p>
-            <p className="text-2xl font-bold text-primary-600">45%</p>
-          </div>
-          <div className="p-4 bg-primary-50 rounded-lg">
-            <p className="text-sm text-gray-600">중증 조치 (7-9호)</p>
-            <p className="text-2xl font-bold text-primary-600">20%</p>
-          </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">지역별 사건 발생 현황</h2>
+          <Bar data={regionalData} />
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">이의제기 현황</h3>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <p className="text-gray-600">전체 이의제기율</p>
-            <p className="font-semibold">12%</p>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-600">이의제기 성공률</p>
-            <p className="font-semibold">25%</p>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-600">평균 처리 기간</p>
-            <p className="font-semibold">14일</p>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">학교급별 사건 발생 현황</h2>
+          <Pie data={schoolLevelData} />
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">사건 유형별 발생 현황</h2>
+          <Pie data={incidentTypeData} />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Statistics; 
