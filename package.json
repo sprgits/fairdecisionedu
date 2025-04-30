@@ -2,7 +2,7 @@
   "name": "fairdecisionedu",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://[사용자명].github.io/fairdecisionedu",
+  "homepage": "https://sprgits.github.io/fairdecisionedu",
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
