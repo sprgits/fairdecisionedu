@@ -7,7 +7,7 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 } from 'chart.js';
 
 ChartJS.register(
@@ -19,91 +19,98 @@ ChartJS.register(
   Legend
 );
 
-function CaseAnalysis() {
+const CaseAnalysis = () => {
   const [formData, setFormData] = useState({
-    violenceType: '',
     schoolLevel: '',
-    victimCount: '',
-    offenderCount: '',
-    hasInjury: false,
-    isCyber: false,
-    isRepeat: false,
+    incidentType: '',
+    incidentDate: '',
+    description: ''
   });
-
   const [analysisResult, setAnalysisResult] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // 임의의 분석 결과 생성
+    // 통계 데이터와 일치하는 랜덤 분석 결과 생성
     const similarCases = [
       {
         id: 1,
+        date: '2024-03-15',
+        school: '서울시 A중학교',
+        type: '언어폭력',
         similarity: Math.floor(Math.random() * 20) + 80, // 80-100% 유사도
-        violenceType: formData.violenceType || '언어폭력',
-        schoolLevel: formData.schoolLevel || '중학교',
-        decisionLevel: Math.floor(Math.random() * 3) + 3, // 3-5호
-        date: '2023-06-15',
+        decision: '제8호 조치'
       },
       {
         id: 2,
-        similarity: Math.floor(Math.random() * 15) + 70, // 70-85% 유사도
-        violenceType: formData.violenceType || '신체폭력',
-        schoolLevel: formData.schoolLevel || '고등학교',
-        decisionLevel: Math.floor(Math.random() * 3) + 4, // 4-6호
-        date: '2023-06-10',
+        date: '2024-04-22',
+        school: '경기도 B중학교',
+        type: '신체폭력',
+        similarity: Math.floor(Math.random() * 20) + 60, // 60-80% 유사도
+        decision: '제6호 조치'
       },
+      {
+        id: 3,
+        date: '2024-05-10',
+        school: '인천시 C중학교',
+        type: '집단따돌림',
+        similarity: Math.floor(Math.random() * 20) + 40, // 40-60% 유사도
+        decision: '제7호 조치'
+      }
     ];
 
-    const recommendedLevel = Math.floor(Math.random() * 3) + 4; // 4-6호 권고
+    // 유사 사례의 조치 수준 분포
+    const decisionDistribution = {
+      labels: ['제1-3호', '제4-6호', '제7-9호'],
+      datasets: [{
+        label: '유사 사례 조치 수준 분포',
+        data: [25, 45, 30],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(255, 99, 132, 0.5)'
+        ],
+        borderColor: [
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 99, 132)'
+        ],
+        borderWidth: 1
+      }]
+    };
 
     setAnalysisResult({
       similarCases,
-      recommendedLevel,
-      averageLevel: Math.floor(Math.random() * 2) + 4, // 4-5호 평균
+      decisionDistribution,
+      recommendedDecision: '제7호 조치',
+      confidence: Math.floor(Math.random() * 20) + 80 // 80-100% 신뢰도
     });
   };
 
   return (
-    <div className="space-y-8">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">사건 분석</h2>
-        <p className="text-gray-600 mb-8">유사한 사건과 비교하여 공정한 조치 수준을 제안합니다.</p>
-        
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <label className="block text-lg font-medium text-gray-700">폭력 유형</label>
-              <select
-                name="violenceType"
-                value={formData.violenceType}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-              >
-                <option value="">선택하세요</option>
-                <option value="verbal">언어폭력</option>
-                <option value="physical">신체폭력</option>
-                <option value="bullying">따돌림</option>
-                <option value="sexual">성폭력</option>
-                <option value="cyber">사이버폭력</option>
-              </select>
-            </div>
-
-            <div className="space-y-4">
-              <label className="block text-lg font-medium text-gray-700">학교급</label>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">사건 분석</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">사건 정보 입력</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">학교급</label>
               <select
                 name="schoolLevel"
                 value={formData.schoolLevel}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                className="w-full p-2 border rounded-md"
+                required
               >
                 <option value="">선택하세요</option>
                 <option value="elementary">초등학교</option>
@@ -111,147 +118,98 @@ function CaseAnalysis() {
                 <option value="high">고등학교</option>
               </select>
             </div>
-
-            <div className="space-y-4">
-              <label className="block text-lg font-medium text-gray-700">피해자 수</label>
-              <input
-                type="number"
-                name="victimCount"
-                value={formData.victimCount}
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">사건 유형</label>
+              <select
+                name="incidentType"
+                value={formData.incidentType}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                placeholder="피해자 수를 입력하세요"
+                className="w-full p-2 border rounded-md"
+                required
+              >
+                <option value="">선택하세요</option>
+                <option value="physical">신체폭력</option>
+                <option value="verbal">언어폭력</option>
+                <option value="extortion">금품갈취</option>
+                <option value="bullying">집단따돌림</option>
+                <option value="sexual">성폭력</option>
+                <option value="cyber">사이버폭력</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">발생 일자</label>
+              <input
+                type="date"
+                name="incidentDate"
+                value={formData.incidentDate}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-md"
+                required
               />
             </div>
-
-            <div className="space-y-4">
-              <label className="block text-lg font-medium text-gray-700">가해자 수</label>
-              <input
-                type="number"
-                name="offenderCount"
-                value={formData.offenderCount}
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">사건 내용</label>
+              <textarea
+                name="description"
+                value={formData.description}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                placeholder="가해자 수를 입력하세요"
+                className="w-full p-2 border rounded-md h-32"
+                required
               />
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                name="hasInjury"
-                checked={formData.hasInjury}
-                onChange={handleChange}
-                className="h-5 w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-              />
-              <label className="text-gray-700">신체 피해 여부</label>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                name="isCyber"
-                checked={formData.isCyber}
-                onChange={handleChange}
-                className="h-5 w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-              />
-              <label className="text-gray-700">사이버 포함 여부</label>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                name="isRepeat"
-                checked={formData.isRepeat}
-                onChange={handleChange}
-                className="h-5 w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-              />
-              <label className="text-gray-700">재발 여부</label>
-            </div>
-          </div>
-
-          <div className="flex justify-end">
+            
             <button
               type="submit"
-              className="bg-primary-600 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
             >
               분석 시작
             </button>
-          </div>
-        </form>
-      </div>
-
-      {analysisResult && (
-        <div className="space-y-8">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">분석 결과</h3>
+          </form>
+        </div>
+        
+        {analysisResult && (
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">분석 결과</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-primary-50 p-6 rounded-lg">
-                <p className="text-sm text-gray-600">권고 조치 수준</p>
-                <p className="text-3xl font-bold text-primary-600">{analysisResult.recommendedLevel}호</p>
-              </div>
-              <div className="bg-primary-50 p-6 rounded-lg">
-                <p className="text-sm text-gray-600">유사 사건 평균</p>
-                <p className="text-3xl font-bold text-primary-600">{analysisResult.averageLevel}호</p>
-              </div>
-              <div className="bg-primary-50 p-6 rounded-lg">
-                <p className="text-sm text-gray-600">분석된 사건 수</p>
-                <p className="text-3xl font-bold text-primary-600">{analysisResult.similarCases.length}건</p>
-              </div>
-            </div>
-
-            <h4 className="text-xl font-semibold text-gray-800 mb-4">유사 사건</h4>
-            <div className="space-y-4">
-              {analysisResult.similarCases.map(caseItem => (
-                <div key={caseItem.id} className="border-b pb-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium text-lg">{caseItem.violenceType}</p>
-                      <p className="text-sm text-gray-500">{caseItem.schoolLevel} | {caseItem.date}</p>
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-2">유사 사례</h3>
+              <div className="space-y-4">
+                {analysisResult.similarCases.map(case_ => (
+                  <div key={case_.id} className="border-b pb-4">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium">{case_.school}</span>
+                      <span className="text-sm text-gray-500">{case_.date}</span>
                     </div>
-                    <div className="text-right">
-                      <p className="text-primary-600 font-bold">{caseItem.similarity}% 유사도</p>
-                      <p className="text-sm text-gray-600">조치: {caseItem.decisionLevel}호</p>
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-sm text-gray-600">{case_.type}</span>
+                      <span className="text-sm font-medium">유사도: {case_.similarity}%</span>
+                    </div>
+                    <div className="mt-1">
+                      <span className="text-sm text-gray-600">조치: {case_.decision}</span>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-2">유사 사례 조치 수준 분포</h3>
+              <Bar data={analysisResult.decisionDistribution} />
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-md">
+              <h3 className="text-lg font-medium mb-2">권장 조치</h3>
+              <p className="text-xl font-bold text-blue-600">{analysisResult.recommendedDecision}</p>
+              <p className="text-sm text-gray-600 mt-1">신뢰도: {analysisResult.confidence}%</p>
             </div>
           </div>
-
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">조치 수준 분포</h3>
-            <div className="h-64">
-              <Bar
-                data={{
-                  labels: ['1호', '2호', '3호', '4호', '5호', '6호', '7호', '8호', '9호'],
-                  datasets: [
-                    {
-                      label: '사건 수',
-                      data: [5, 8, 12, 15, 20, 18, 10, 8, 4],
-                      backgroundColor: 'rgba(2, 132, 199, 0.5)',
-                    },
-                  ],
-                }}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default CaseAnalysis; 
